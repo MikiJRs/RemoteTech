@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                  // Çıkış kodunun hangi ECMAScript sürümüne derleneceğini belirtir.
+    "module": "commonjs",              // Node.js ortamında kullanılan modül sistemi.
+    "outDir": "./dist",                // Derlenmiş dosyaların çıkış dizini.
+    "rootDir": "./src",                // Kaynak dosyalarının yer aldığı dizin.
+    "strict": true,                    // TypeScript'in sıkı tür kontrol kurallarını etkinleştirir.
+    "esModuleInterop": true,           // ES6 modüllerle CommonJS modüllerinin birlikte çalışmasını sağlar.
+    "skipLibCheck": true               // Kütüphanelerin tip tanımlamalarını kontrol etmeyi atlar (performansı artırır).
+  },
+  "include": ["src/**/*.ts"],          // Derlenmesi gereken dosyaları belirler (src altındaki tüm TypeScript dosyaları).
+  "exclude": ["node_modules"]          // Derlemeye dahil edilmemesi gereken dosyaları belirler.
+}
