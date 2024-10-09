@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Login: React.FC = () => {
+const Login = () => {
   return (
     <div className="flex h-screen">
       {/* Sol kısım - Form alanı */}
       <div className="w-1/2 bg-gray-200 flex flex-col justify-center p-8">
-        <h2 className="text-3xl font-semibold mb-6">Admin Log in Page</h2>
+        <h2 className="text-3xl font-semibold mb-6">Admin Login Page</h2>
         <form>
           {/* Email Input */}
           <div className="mb-4">
