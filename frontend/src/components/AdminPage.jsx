@@ -44,7 +44,7 @@ const AdminPage = () => {
                 <div className="p-8">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold">Manage Question Package</h1>
-                        <button onClick={() => navigate('/admin/add-package')} className="bg-gray-300 p-3 rounded">+</button>
+                        <button onClick={() => navigate('/manage-question-package/add-package')} className="bg-gray-300 p-3 rounded">+</button>
                     </div>
 
                     {/* Paket Listesi */}

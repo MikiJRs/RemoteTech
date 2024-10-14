@@ -12,10 +12,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
 
         {/* AdminPage bileşeni için route */}
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/manage-question-package" element={<AdminPage />} />
 
         {/* Paket Ekleme Sayfası */}
-        <Route path="/admin/add-package" element={<AddPackage />} />
+        <Route path="/manage-question-package/add-package" element={<AddPackage />} />
 
         {/* Root path (/) kullanıldığında otomatik olarak /login sayfasına yönlendirme */}
         <Route path="*" element={<Login />} />

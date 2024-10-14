@@ -5,13 +5,21 @@ const AddPackage = () => {
   const [questions, setQuestions] = useState([
     { id: 1, question: '', time: '2 min' }
   ]);
+  const [showModal, setShowModal] = useState(false);
+  const [newQuestion, setNewQuestion] = useState({ question: '', time: '2 min' });
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { id: questions.length + 1, question: '', time: '2 min' }]);
+    setShowModal(true);
   };
 
   const handleQuestionChange = (id, value) => {
     setQuestions(questions.map(q => q.id === id ? { ...q, question: value } : q));
+  };
+
+  const handleSaveQuestion = () => {
+    setQuestions([...questions, { id: questions.length + 1, question: newQuestion.question, time: newQuestion.time }]);
+    setNewQuestion({ question: '', time: '2 min' });
+    setShowModal(false);
   };
 
   const handleSave = () => {
@@ -22,7 +30,7 @@ const AddPackage = () => {
   return (
     <div className="flex h-screen">
       {/* Sol Menü */}
-      <div className="w-1/5 bg-gray-200 p-6">
+      <div className="w-1/5 bg-gray-200 p-4">
         <h2 className="text-2xl font-bold mb-10 text-center">Admin Panel</h2>
         <h3 className="text-xl font-semibold mb-2">Menu</h3>
         <hr className="border-t-2 border-gray-300 mb-6" />
@@ -91,12 +99,54 @@ const AddPackage = () => {
           </div>
 
           {/* Soru Ekleme ve Kaydetme Butonları */}
-          <div className="flex justify-end">
-            <button className="bg-gray-400 p-2 rounded mr-2">Cancel</button>
-            <button onClick={handleSave} className="bg-blue-500 text-white p-2 rounded">Save</button>
+          <div className="flex justify-between">
+            <button className="bg-gray-400 p-2 w-24 rounded">Cancel</button>
+            <button onClick={handleSave} className="bg-blue-500 text-white p-2 w-24 rounded">Save</button>
           </div>
         </div>
       </div>
+
+      {/* Soru Ekleme Modalı */}
+      {showModal && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-md shadow-md w-1/4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Add Question</h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-500">✖</button>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 font-semibold">Question</label>
+              <textarea
+                value={newQuestion.question}
+                onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
+                className="w-full p-2 border rounded"
+                placeholder="Input..."
+              />
+            </div>
+
+
+            <div className="flex items-center mb-2 bg-gray-100 p-2 rounded-lg">
+              <div className="flex items-center border rounded-lg mr-auto"> {/* "mr-auto" kullanarak sol tarafa yapıştırıldı */}
+                <input
+                  type="number"
+                  value={newQuestion.time}
+                  onChange={(e) => setNewQuestion({ ...newQuestion, time: e.target.value })}
+                  className="w-16 p-2 border-r rounded-l"
+                />
+                <span className="p-2">min</span>
+              </div>
+              <div className="ml-auto"> {/* "ml-auto" kullanarak Add butonunu sağa yapıştırdım */}
+                <button onClick={handleSaveQuestion} className="bg-blue-500 text-white p-2 rounded">Add</button>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };
