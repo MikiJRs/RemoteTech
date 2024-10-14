@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
+    const navigate = useNavigate();
+
     const [packages, setPackages] = useState([
         { id: 1, name: 'Backend Question Package', questionCount: 10 },
         { id: 2, name: 'Frontend Question Package', questionCount: 8 },
@@ -12,8 +15,8 @@ const AdminPage = () => {
         <div className="flex h-screen">
             {/* Sol Menü */}
             <div className="w-1/5 bg-gray-200 p-6">
-                <h2 className="text-2xl font-bold mb-6">Admin Panel</h2>
-                <h3 className="text-xl* font-semibold mb-2">Menu</h3>
+                <h2 className="text-2xl font-bold mb-10 text-center">Admin Panel</h2>
+                <h3 className="text-xl font-semibold mb-2">Menu</h3>
                 <hr className="border-t-2 border-gray-300 mb-6" />
                 <ul>
                     <li className="mb-4">
@@ -24,7 +27,6 @@ const AdminPage = () => {
                     </li>
                 </ul>
             </div>
-
 
             {/* Sağ İçerik Alanı */}
             <div className="w-4/5 bg-white">
@@ -42,15 +44,7 @@ const AdminPage = () => {
                 <div className="p-8">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold">Manage Question Package</h1>
-                        <button className="bg-gray-300 p-2 rounded">+</button>
-                    </div>
-
-                    {/* Tablo Başlığı */}
-                    <div className="grid grid-cols-4 bg-gray-100 p-4 rounded-lg">
-                        <div>#</div>
-                        <div>Package Name</div>
-                        <div>Question Count</div>
-                        <div>Action</div>
+                        <button onClick={() => navigate('/admin/add-package')} className="bg-gray-300 p-3 rounded">+</button>
                     </div>
 
                     {/* Paket Listesi */}
