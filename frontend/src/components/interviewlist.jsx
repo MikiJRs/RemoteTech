@@ -74,7 +74,6 @@ const MulakatAdmin = () => {
         <div className="flex justify-between items-center p-3 border-b border-gray-300">
           <h1 className="text-xl font-semibold text-[#002D3A]">Remote-tech Admin Page</h1>
           <div className="flex items-center">
-            <span className="mr-4 text-gray-700">Username</span>
             <button className="bg-[#004D61] text-white px-3 py-2 rounded-md hover:bg-[#003843] transition">
               Logout
             </button>
@@ -93,16 +92,16 @@ const MulakatAdmin = () => {
           {interviewList.length > 0 ? (
             <ul className="grid grid-cols-3 gap-6">
               {interviewList.map((interview, index) => (
-                <li 
-                  key={index} 
+                <li
+                  key={index}
                   className="p-6 border rounded bg-white shadow-md relative"
                   style={{ minHeight: '280px' }}>
-                  <button 
-                    className="absolute top-2 left-2 text-gray-400 hover:text-gray-600" 
+                  <button
+                    className="absolute top-2 left-2 text-gray-400 hover:text-gray-600"
                     onClick={() => setQuestionListOpen(true)}>
                     ?
                   </button>
-                  
+
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold mt-4">{interview.title}</h3>
                     <div className="text-gray-500">
@@ -125,8 +124,8 @@ const MulakatAdmin = () => {
                   </div>
                   <div className="flex justify-between items-center text-sm text-gray-500">
                     <span>📅 Published</span>
-                    <button 
-                      className="text-blue-500" 
+                    <button
+                      className="text-blue-500"
                       onClick={() => navigate(`/videocollection/${interview.packageType}`)}>
                       See Videos &gt;
                     </button>
@@ -204,7 +203,7 @@ const MulakatAdmin = () => {
                 </label>
               </div>
 
-              <button 
+              <button
                 className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition"
                 onClick={handleFormKaydet}>
                 Save Interview

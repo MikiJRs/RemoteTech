@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
-import AdminPage from './components/AdminPage';
+import ManageQuestionPackage from './components/ManageQuestionPackage';
 import AddPackage from './components/AddPackage';
 import InterviewList from './components/interviewlist';
 import VideoCollection from './components/VideoCollection';
@@ -15,8 +15,8 @@ const App = () => {
         {/* Login sayfası için route */}
         <Route path="/login" element={<Login />} />
 
-        {/* AdminPage bileşeni için route */}
-        <Route path="/manage-question-package" element={<AdminPage />} />
+        {/* ManageQuestionPackage bileşeni için route */}
+        <Route path="/manage-question-package" element={<ManageQuestionPackage />} />
 
         {/* Paket Ekleme Sayfası */}
         <Route path="/manage-question-package/add-package" element={<AddPackage />} />

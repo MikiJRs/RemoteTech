@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useQuestionPackageStore from '../stores/questionPackageStore';
 
 const AddPackage = () => {
   const navigate = useNavigate();
@@ -8,6 +9,9 @@ const AddPackage = () => {
   const [showModal, setShowModal] = useState(false);
   const [newQuestion, setNewQuestion] = useState({ question: '', time: '2 min' });
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Store'dan addPackage fonksiyonunu alıyoruz
+  const { addPackage, loading } = useQuestionPackageStore();
 
   const handleAddQuestion = () => {
     setShowModal(true);
@@ -30,8 +34,31 @@ const AddPackage = () => {
     setErrorMessage('');
   };
 
-  const handleSave = () => {
-    console.log('Package saved:', { packageName, questions });
+  const handleSave = async () => {
+    if (!packageName.trim()) {
+      setErrorMessage('Lütfen paket ismini girin.');
+      return;
+    }
+
+    if (questions.length === 0) {
+      setErrorMessage('En az bir soru eklemelisiniz.');
+      return;
+    }
+
+    // Kontrol: Her sorunun bir `questionText` alanına sahip olduğundan emin ol
+    const invalidQuestions = questions.some(q => !q.question.trim());
+    if (invalidQuestions) {
+      setErrorMessage('Lütfen tüm soruların dolu olduğundan emin olun.');
+      return;
+    }
+
+    try {
+      // Backend'e paketi kaydediyoruz
+      await addPackage({ packageName: packageName.trim(), questions: questions.map(q => ({ questionText: q.question.trim(), time: q.time })) });
+      navigate('/manage-question-package');
+    } catch (err) {
+      console.error('Paket kaydedilemedi:', err);
+    }
   };
 
   return (
@@ -46,7 +73,7 @@ const AddPackage = () => {
             <a onClick={() => navigate('/manage-question-package')} className="text-gray-200 hover:text-white">Manage Question Package</a>
           </li>
           <li>
-          <a onClick={() => navigate('/interviewlist')} className="text-gray-200 hover:text-white cursor-pointer">Interview List</a>
+            <a onClick={() => navigate('/interviewlist')} className="text-gray-200 hover:text-white cursor-pointer">Interview List</a>
           </li>
         </ul>
       </div>
@@ -75,7 +102,7 @@ const AddPackage = () => {
               onChange={(e) => setPackageName(e.target.value)}
               className="flex-grow p-3 border rounded-md mr-2"
             />
-            <button onClick={handleAddQuestion} className="bg-[#004D61] text-white p-3 rounded">+</button>
+            <button onClick={handleAddQuestion} className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">+</button>
           </div>
 
           {/* Soru Listesi */}
@@ -88,7 +115,7 @@ const AddPackage = () => {
             </div>
 
             {questions.map((q, index) => (
-              <div key={q.id} className="flex justify-between items-center bg-white p-4 mb-2 rounded-lg shadow-md">
+              <div key={q.id ? q.id : `question-${index}`} className="flex justify-between items-center bg-white p-4 mb-2 rounded-lg shadow-md">
                 <span>{index + 1}</span>
                 <input
                   type="text"
@@ -113,7 +140,9 @@ const AddPackage = () => {
           {/* Soru Ekleme ve Kaydetme Butonları */}
           <div className="flex justify-between">
             <button className="bg-gray-400 p-2 w-24 rounded hover:bg-gray-300" onClick={() => navigate('/manage-question-package')}>Cancel</button>
-            <button onClick={handleSave} className="bg-[#004D61] text-white p-2 w-24 rounded">Save</button>
+            <button onClick={handleSave} className="bg-[#004D61] text-white p-2 w-24 rounded">
+              {loading ? 'Saving...' : 'Save'}
+            </button>
           </div>
         </div>
       </div>
