@@ -9,6 +9,7 @@ const VideoCollection = () => {
 
   return (
     <div className="flex h-screen">
+       
       {/* Sol Menü */}
       <div className="w-1/5 bg-[#002D3A] p-6">
         <h2 className="text-2xl font-bold mb-10 text-center text-white">Admin Panel</h2>
