@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useQuestionPackageStore from '../stores/questionPackageStore';
 
 const AdminPage = () => {
     const navigate = useNavigate();
 
-    const [packages, setPackages] = useState([
-        { id: 1, name: 'Backend Question Package', questionCount: 10 },
-        { id: 2, name: 'Frontend Question Package', questionCount: 8 },
-        { id: 3, name: 'Fullstack Question Package', questionCount: 5 },
-        { id: 4, name: 'Devops Question Package', questionCount: 7 },
-    ]);
+    // Zustand store'dan verileri ve fonksiyonları al
+    const { questionPackages, fetchPackages, deletePackage, updatePackage } = useQuestionPackageStore();
+
+    // Bileşen yüklendiğinde (mount) verileri çek
+    useEffect(() => {
+        fetchPackages();
+    }, [fetchPackages]);
 
     return (
         <div className="flex h-screen">
@@ -49,14 +51,24 @@ const AdminPage = () => {
 
                     {/* Paket Listesi */}
                     <div className="mt-4">
-                        {packages.map((pkg) => (
-                            <div key={pkg.id} className="flex justify-between items-center bg-gray-50 p-4 mb-2 rounded-lg shadow">
-                                <span>{pkg.id}</span>
-                                <span>{pkg.name}</span>
-                                <span>{pkg.questionCount}</span>
+                        {questionPackages.map((pkg) => (
+                            <div key={pkg._id} className="flex justify-between items-center bg-gray-50 p-4 mb-2 rounded-lg shadow">
+                                <span>{pkg._id}</span>
+                                <span>{pkg.packageName}</span>
+                                <span>{pkg.questions.length} questions</span>
                                 <div className="flex gap-2">
-                                    <button className="bg-blue-500 text-white p-2 rounded">✏️</button>
-                                    <button className="bg-red-500 text-white p-2 rounded">🗑️</button>
+                                    <button
+                                        className="bg-blue-500 text-white p-2 rounded"
+                                        onClick={() => updatePackage(pkg._id, { packageName: `${pkg.packageName} (Güncellendi)` })}
+                                    >
+                                        ✏️
+                                    </button>
+                                    <button
+                                        className="bg-red-500 text-white p-2 rounded"
+                                        onClick={() => deletePackage(pkg._id)}
+                                    >
+                                        🗑️
+                                    </button>
                                 </div>
                             </div>
                         ))}

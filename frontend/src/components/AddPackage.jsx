@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useQuestionPackageStore from '../stores/questionPackageStore'; // Zustand store'u içeri aktar
 
 const AddPackage = () => {
+  const navigate = useNavigate();
+
+  // Zustand store'daki addPackage fonksiyonunu al
+  const { addPackage } = useQuestionPackageStore();
+
   const [packageName, setPackageName] = useState('');
   const [questions, setQuestions] = useState([
-    { id: 1, question: '', time: '2 min' }
+    { id: 1, question: '', time: 2 }
   ]);
   const [showModal, setShowModal] = useState(false);
-  const [newQuestion, setNewQuestion] = useState({ question: '', time: '2 min' });
+  const [newQuestion, setNewQuestion] = useState({ question: '', time: 2 });
 
   const handleAddQuestion = () => {
     setShowModal(true);
@@ -18,13 +25,32 @@ const AddPackage = () => {
 
   const handleSaveQuestion = () => {
     setQuestions([...questions, { id: questions.length + 1, question: newQuestion.question, time: newQuestion.time }]);
-    setNewQuestion({ question: '', time: '2 min' });
+    setNewQuestion({ question: '', time: 2 });
     setShowModal(false);
   };
 
   const handleSave = () => {
-    // Paket kaydetme işlemi burada yapılacak (backend'e gönderme vb.)
-    console.log('Package saved:', { packageName, questions });
+    // Paket kaydetme işlemi - Zustand store'daki addPackage fonksiyonunu çağır
+    const newPackage = {
+      packageName,
+      questions: questions.map(q => ({
+        questionText: q.question,
+        question_time: {
+          hours: 0,
+          minutes: q.time,
+          seconds: 0,
+        }
+      }))
+    };
+    
+    addPackage(newPackage) // Yeni paketi store'a ekle (backend'e gönder)
+      .then(() => {
+        console.log('Package saved:', newPackage);
+        navigate('/admin'); // Paket kaydedildikten sonra admin sayfasına yönlendir
+      })
+      .catch((error) => {
+        console.error('Package save failed:', error);
+      });
   };
 
   return (
@@ -90,7 +116,7 @@ const AddPackage = () => {
                   className="flex-1 p-2 border rounded"
                   placeholder="Enter your question here"
                 />
-                <span>{q.time}</span>
+                <span>{q.time} min</span>
                 <button onClick={() => setQuestions(questions.filter(question => question.id !== q.id))} className="text-red-500">
                   🗑️
                 </button>
@@ -100,7 +126,7 @@ const AddPackage = () => {
 
           {/* Soru Ekleme ve Kaydetme Butonları */}
           <div className="flex justify-between">
-            <button className="bg-gray-400 p-2 w-24 rounded">Cancel</button>
+            <button className="bg-gray-400 p-2 w-24 rounded" onClick={() => navigate('/admin')}>Cancel</button>
             <button onClick={handleSave} className="bg-blue-500 text-white p-2 w-24 rounded">Save</button>
           </div>
         </div>
@@ -123,10 +149,8 @@ const AddPackage = () => {
                 placeholder="Input..."
               />
             </div>
-
-
             <div className="flex items-center mb-2 bg-gray-100 p-2 rounded-lg">
-              <div className="flex items-center border rounded-lg mr-auto"> {/* "mr-auto" kullanarak sol tarafa yapıştırıldı */}
+              <div className="flex items-center border rounded-lg mr-auto">
                 <input
                   type="number"
                   value={newQuestion.time}
@@ -135,15 +159,10 @@ const AddPackage = () => {
                 />
                 <span className="p-2">min</span>
               </div>
-              <div className="ml-auto"> {/* "ml-auto" kullanarak Add butonunu sağa yapıştırdım */}
+              <div className="ml-auto">
                 <button onClick={handleSaveQuestion} className="bg-blue-500 text-white p-2 rounded">Add</button>
               </div>
             </div>
-
-
-
-
-
           </div>
         </div>
       )}
