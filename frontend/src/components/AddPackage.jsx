@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useQuestionPackageStore from '../stores/questionPackageStore'; // Zustand store'u içeri aktar
 
 const AddPackage = () => {
   const navigate = useNavigate();
-
-  // Zustand store'daki addPackage fonksiyonunu al
-  const { addPackage } = useQuestionPackageStore();
-
   const [packageName, setPackageName] = useState('');
-  const [questions, setQuestions] = useState([
-    { id: 1, question: '', time: 2 }
-  ]);
+  const [questions, setQuestions] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newQuestion, setNewQuestion] = useState({ question: '', time: 2 });
+  const [newQuestion, setNewQuestion] = useState({ question: '', time: '2 min' });
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleAddQuestion = () => {
     setShowModal(true);
+    setErrorMessage('');
   };
 
   const handleQuestionChange = (id, value) => {
@@ -24,60 +19,46 @@ const AddPackage = () => {
   };
 
   const handleSaveQuestion = () => {
+    if (!newQuestion.question.trim()) {
+      setErrorMessage('Lütfen bir soru girin.');
+      return;
+    }
+
     setQuestions([...questions, { id: questions.length + 1, question: newQuestion.question, time: newQuestion.time }]);
-    setNewQuestion({ question: '', time: 2 });
+    setNewQuestion({ question: '', time: '2 min' });
     setShowModal(false);
+    setErrorMessage('');
   };
 
   const handleSave = () => {
-    // Paket kaydetme işlemi - Zustand store'daki addPackage fonksiyonunu çağır
-    const newPackage = {
-      packageName,
-      questions: questions.map(q => ({
-        questionText: q.question,
-        question_time: {
-          hours: 0,
-          minutes: q.time,
-          seconds: 0,
-        }
-      }))
-    };
-    
-    addPackage(newPackage) // Yeni paketi store'a ekle (backend'e gönder)
-      .then(() => {
-        console.log('Package saved:', newPackage);
-        navigate('/admin'); // Paket kaydedildikten sonra admin sayfasına yönlendir
-      })
-      .catch((error) => {
-        console.error('Package save failed:', error);
-      });
+    console.log('Package saved:', { packageName, questions });
   };
 
   return (
     <div className="flex h-screen">
       {/* Sol Menü */}
-      <div className="w-1/5 bg-gray-200 p-4">
-        <h2 className="text-2xl font-bold mb-10 text-center">Admin Panel</h2>
-        <h3 className="text-xl font-semibold mb-2">Menu</h3>
+      <div className="w-1/5 bg-[#002D3A] p-6">
+        <h2 className="text-2xl font-bold mb-10 text-center text-white">Admin Panel</h2>
+        <h3 className="text-xl font-semibold mb-2 text-white">Menu</h3>
         <hr className="border-t-2 border-gray-300 mb-6" />
         <ul>
           <li className="mb-4">
-            <a href="#" className="text-gray-700">Manage Question Package</a>
+            <a onClick={() => navigate('/manage-question-package')} className="text-gray-200 hover:text-white">Manage Question Package</a>
           </li>
           <li>
-            <a href="#" className="text-gray-700">Interview List</a>
+          <a onClick={() => navigate('/interviewlist')} className="text-gray-200 hover:text-white cursor-pointer">Interview List</a>
           </li>
         </ul>
       </div>
 
       {/* Sağ İçerik Alanı */}
-      <div className="w-4/5 bg-white">
+      <div className="w-4/5 bg-[#F9F9F9]">
         {/* Üst kısım - Remote-tech Admin Page ve Çıkış Butonu */}
         <div className="flex justify-between items-center p-3 border-b border-gray-300">
-          <h1 className="text-xl font-semibold">Remote-tech Admin Page</h1>
+          <h1 className="text-xl font-semibold text-[#002D3A]">Remote-tech Admin Page</h1>
           <div className="flex items-center">
             <span className="mr-4 text-gray-700">Username</span>
-            <button className="bg-gray-800 text-white px-3 py-2 rounded-md hover:bg-gray-700 transition">
+            <button className="bg-[#004D61] text-white px-3 py-2 rounded-md hover:bg-[#003843] transition">
               Exit
             </button>
           </div>
@@ -94,7 +75,7 @@ const AddPackage = () => {
               onChange={(e) => setPackageName(e.target.value)}
               className="flex-grow p-3 border rounded-md mr-2"
             />
-            <button onClick={handleAddQuestion} className="bg-gray-300 p-3 rounded">+</button>
+            <button onClick={handleAddQuestion} className="bg-[#004D61] text-white p-3 rounded">+</button>
           </div>
 
           {/* Soru Listesi */}
@@ -107,7 +88,7 @@ const AddPackage = () => {
             </div>
 
             {questions.map((q, index) => (
-              <div key={q.id} className="flex justify-between items-center bg-gray-50 p-4 mb-2 rounded-lg shadow">
+              <div key={q.id} className="flex justify-between items-center bg-white p-4 mb-2 rounded-lg shadow-md">
                 <span>{index + 1}</span>
                 <input
                   type="text"
@@ -116,18 +97,23 @@ const AddPackage = () => {
                   className="flex-1 p-2 border rounded"
                   placeholder="Enter your question here"
                 />
-                <span>{q.time} min</span>
-                <button onClick={() => setQuestions(questions.filter(question => question.id !== q.id))} className="text-red-500">
+                <span>{q.time}</span>
+                <button onClick={() => setQuestions(questions.filter(question => question.id !== q.id))} className="text-[#B0BEC5] hover:text-[#90A4AE]">
                   🗑️
                 </button>
               </div>
             ))}
           </div>
 
+          {/* Hata Mesajı */}
+          {errorMessage && (
+            <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+          )}
+
           {/* Soru Ekleme ve Kaydetme Butonları */}
           <div className="flex justify-between">
-            <button className="bg-gray-400 p-2 w-24 rounded" onClick={() => navigate('/admin')}>Cancel</button>
-            <button onClick={handleSave} className="bg-blue-500 text-white p-2 w-24 rounded">Save</button>
+            <button className="bg-gray-400 p-2 w-24 rounded hover:bg-gray-300" onClick={() => navigate('/manage-question-package')}>Cancel</button>
+            <button onClick={handleSave} className="bg-[#004D61] text-white p-2 w-24 rounded">Save</button>
           </div>
         </div>
       </div>
@@ -149,6 +135,12 @@ const AddPackage = () => {
                 placeholder="Input..."
               />
             </div>
+
+            {/* Hata Mesajı */}
+            {errorMessage && (
+              <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+            )}
+
             <div className="flex items-center mb-2 bg-gray-100 p-2 rounded-lg">
               <div className="flex items-center border rounded-lg mr-auto">
                 <input
@@ -160,7 +152,7 @@ const AddPackage = () => {
                 <span className="p-2">min</span>
               </div>
               <div className="ml-auto">
-                <button onClick={handleSaveQuestion} className="bg-blue-500 text-white p-2 rounded">Add</button>
+                <button onClick={handleSaveQuestion} className="bg-[#004D61] text-white p-2 rounded">Add</button>
               </div>
             </div>
           </div>
