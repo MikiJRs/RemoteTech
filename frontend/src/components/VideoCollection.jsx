@@ -6,10 +6,6 @@ const VideoCollection = () => {
   const navigate = useNavigate(); // Initialize navigate for navigation
   const candidates = []; // Burada adayların listesini doldurun
 
-  // Add a function to handle navigation
-  const handleNavigate = () => {
-    navigate('/'); // Navigate back to the admin panel or a specific route
-  };
 
   return (
     <div className="flex h-screen">
@@ -20,14 +16,14 @@ const VideoCollection = () => {
         <hr className="border-t-2 border-gray-300 mb-6" />
         <ul>
           <li className="mb-4">
-            <a 
-              onClick={() => navigate('/manage-question-package')} 
+            <a
+              onClick={() => navigate('/manage-question-package')}
               className="text-gray-200 hover:text-white cursor-pointer">Manage Question Package
             </a>
           </li>
           <li>
-            <a 
-              onClick={() => navigate('/interviewlist')} 
+            <a
+              onClick={() => navigate('/interviewlist')}
               className="text-gray-200 hover:text-white cursor-pointer">Interview List
             </a>
           </li>
@@ -38,11 +34,13 @@ const VideoCollection = () => {
       <div className="w-4/5 bg-[#F9F9F9]">
         <div className="flex justify-between items-center p-3 border-b border-gray-300">
           <h1 className="text-xl font-semibold text-[#002D3A]">{interviewType} Video Collection</h1>
-          <button 
-            onClick={handleNavigate} 
-            className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">
-            Back to Admin
+          <button
+            className="bg-[#004D61] text-white px-3 py-2 rounded-md hover:bg-[#003843] transition"
+            onClick={() => navigate('/login')}
+          >
+            Logout
           </button>
+
         </div>
 
         <div className="p-8 grid grid-cols-3 gap-4">

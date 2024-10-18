@@ -36,15 +36,19 @@ const ManageQuestionPackage = () => {
                 <div className="flex justify-between items-center p-3 border-b border-gray-300">
                     <h1 className="text-xl font-semibold">Remote-tech Admin Page</h1>
                     <div className="flex items-center">
-                        <button className="bg-[#004D61] text-white px-3 py-2 rounded-md hover:bg-[#003843] transition">
+                        <button
+                            className="bg-[#004D61] text-white px-3 py-2 rounded-md hover:bg-[#003843] transition"
+                            onClick={() => navigate('/login')}
+                        >
                             Logout
                         </button>
+
                     </div>
                 </div>
 
                 <div className="p-8">
                     <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-semibold text-[#002D3A]">Manage Question Package</h2>
+                        <h2 className="text-2xl font-semibold text-[#002D3A]">Manage Question Package</h2>
                         <button onClick={() => navigate('/manage-question-package/add-package')} className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">+</button>
                     </div>
 

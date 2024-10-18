@@ -74,9 +74,13 @@ const MulakatAdmin = () => {
         <div className="flex justify-between items-center p-3 border-b border-gray-300">
           <h1 className="text-xl font-semibold text-[#002D3A]">Remote-tech Admin Page</h1>
           <div className="flex items-center">
-            <button className="bg-[#004D61] text-white px-3 py-2 rounded-md hover:bg-[#003843] transition">
+            <button
+              className="bg-[#004D61] text-white px-3 py-2 rounded-md hover:bg-[#003843] transition"
+              onClick={() => navigate('/login')}
+            >
               Logout
             </button>
+
           </div>
         </div>
 

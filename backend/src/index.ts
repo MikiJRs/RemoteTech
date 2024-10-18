@@ -3,11 +3,15 @@ import { PORT, MONGODB_URI } from './config';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import { createQuestionPackage, getAllQuestionPackages, deleteQuestionPackage, updateQuestionPackage } from './controllers/QuestionPackageController';
+import loginRoutes from './routes/loginRoutes';
 
 const app = express();
 
 // CORS ayarları ekle
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Frontend URL'sini burada belirtin
+  credentials: true // Credentials kullanımını etkinleştir
+}));
 
 // MongoDB'ye bağlan
 mongoose.connect(MONGODB_URI)
@@ -32,6 +36,9 @@ app.delete('/api/question-package/:id', deleteQuestionPackage);
 
 // Belirli bir QuestionPackage'i ID ile güncellemek için PUT isteği
 app.put('/api/question-package/:id', updateQuestionPackage);
+
+// Login route
+app.use('/api', loginRoutes);
 
 app.listen(PORT, () => {
   console.log(`Sunucu http://localhost:${PORT} üzerinde çalışıyor`);
