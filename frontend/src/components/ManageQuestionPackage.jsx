@@ -53,28 +53,32 @@ const ManageQuestionPackage = () => {
                     </div>
 
                     {/* Paket Listesi */}
-                    <div className="bg-gray-100 p-4 rounded-lg mb-4">
-                        
-                        <div className="flex justify-between mb-2">
+                    <div className="bg-gray-100 p-6 rounded-lg mb-6 shadow-md">
+                        <div className="grid grid-cols-4 gap-4 font-semibold text-gray-700 mb-4 border-b pb-2">
                             <span>Order</span>
                             <span>Package</span>
                             <span>Time</span>
-                            <span>Action</span>
+                            <span className="text-center">Action</span>
                         </div>
                         {questionPackages.map((pkg, index) => (
-                            <div key={pkg._id} className="flex justify-between items-center bg-gray-50 p-4 mb-2 rounded-lg shadow">
-                                <span>{index + 1}</span>
-                                <span>{pkg.packageName}</span>
-                                <span>{pkg.questions.length} questions</span>
-                                <div className="flex gap-2">
+                            <div
+                                key={pkg._id}
+                                className="grid grid-cols-4 gap-4 items-center bg-white p-4 mb-3 rounded-lg shadow-sm border"
+                            >
+                                <span className="font-medium text-gray-900">{index + 1}</span>
+                                <span className="text-gray-800">{pkg.packageName}</span>
+                                <span className="text-gray-800">{pkg.questions.length} questions</span>
+                                <div className="flex justify-center gap-3">
                                     <button
-                                        className="bg-gray-300 text-white p-2 rounded"
-                                        onClick={() => updatePackage(pkg._id, { packageName: `${pkg.packageName} (Güncellendi)` })}
+                                        className="bg-gray-300 hover:bg-blue-600 text-white p-2 rounded transition-colors duration-200"
+                                        onClick={() =>
+                                            updatePackage(pkg._id, { packageName: `${pkg.packageName} (Güncellendi)` })
+                                        }
                                     >
                                         🖊️
                                     </button>
                                     <button
-                                        className="bg-gray-300 text-white p-2 rounded"
+                                        className="bg-gray-300 hover:bg-red-600 text-white p-2 rounded transition-colors duration-200"
                                         onClick={() => deletePackage(pkg._id)}
                                     >
                                         🗑️
@@ -83,6 +87,7 @@ const ManageQuestionPackage = () => {
                             </div>
                         ))}
                     </div>
+
                 </div>
             </div>
         </div>

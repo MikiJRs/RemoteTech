@@ -128,7 +128,7 @@ const AddPackage = () => {
                   placeholder="Enter your question here"
                 />
                 <span>{q.time}</span>
-                <button onClick={() => setQuestions(questions.filter(question => question.id !== q.id))} className="text-[#B0BEC5] hover:text-[#90A4AE]">
+                <button onClick={() => setQuestions(questions.filter(question => question.id !== q.id))} className="bg-gray-300 hover:bg-red-600 text-white p-2 rounded transition-colors duration-200">
                   🗑️
                 </button>
               </div>
