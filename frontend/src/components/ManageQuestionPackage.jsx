@@ -55,8 +55,8 @@ const ManageQuestionPackage = () => {
                     {/* Paket Listesi */}
                     <div className="bg-gray-100 p-6 rounded-lg mb-6 shadow-md">
                         <div className="grid grid-cols-4 gap-4 font-semibold text-gray-700 mb-4 border-b pb-2">
-                            <span>Order</span>
-                            <span>Package</span>
+                            <span>Order No</span>
+                            <span>Package Title</span>
                             <span>Time</span>
                             <span className="text-center">Action</span>
                         </div>

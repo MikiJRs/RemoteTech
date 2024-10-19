@@ -111,8 +111,8 @@ const AddPackage = () => {
           {/* Soru Listesi */}
           <div className="bg-gray-100 p-4 rounded-lg mb-4">
             <div className="flex justify-between mb-2">
-              <span>Order</span>
-              <span>Question</span>
+              <span>Order No</span>
+              <span>Question Content</span>
               <span>Time</span>
               <span>Action</span>
             </div>
