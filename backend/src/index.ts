@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { createQuestionPackage, getAllQuestionPackages, deleteQuestionPackage, updateQuestionPackage } from './controllers/QuestionPackageController';
 import loginRoutes from './routes/loginRoutes';
+import adminMiddleware from './middlewares/adminMiddleware'; // Admin middleware'i import ettik
 
 const app = express();
 
@@ -25,16 +26,16 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hoşgeldin, TypeScript ile Express.js sunucu çalışıyor!');
 });
 
-// Yeni bir QuestionPackage oluşturmak için POST isteği
+// Yeni bir QuestionPackage oluşturmak için POST isteği (Sadece adminler)
 app.post('/api/question-package', createQuestionPackage);
 
-// Tüm QuestionPackage verilerini almak için GET isteği
+// Tüm QuestionPackage verilerini almak için GET isteği (Herkes erişebilir)
 app.get('/api/question-packages', getAllQuestionPackages);
 
-// Belirli bir QuestionPackage'i ID ile silmek için DELETE isteği
+// Belirli bir QuestionPackage'i ID ile silmek için DELETE isteği (Sadece adminler)
 app.delete('/api/question-package/:id', deleteQuestionPackage);
 
-// Belirli bir QuestionPackage'i ID ile güncellemek için PUT isteği
+// Belirli bir QuestionPackage'i ID ile güncellemek için PUT isteği (Sadece adminler)
 app.put('/api/question-package/:id', updateQuestionPackage);
 
 // Login route
