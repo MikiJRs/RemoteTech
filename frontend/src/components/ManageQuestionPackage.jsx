@@ -53,7 +53,14 @@ const ManageQuestionPackage = () => {
                     </div>
 
                     {/* Paket Listesi */}
-                    <div className="mt-4">
+                    <div className="bg-gray-100 p-4 rounded-lg mb-4">
+                        
+                        <div className="flex justify-between mb-2">
+                            <span>Order</span>
+                            <span>Package</span>
+                            <span>Time</span>
+                            <span>Action</span>
+                        </div>
                         {questionPackages.map((pkg, index) => (
                             <div key={pkg._id} className="flex justify-between items-center bg-gray-50 p-4 mb-2 rounded-lg shadow">
                                 <span>{index + 1}</span>
@@ -61,13 +68,13 @@ const ManageQuestionPackage = () => {
                                 <span>{pkg.questions.length} questions</span>
                                 <div className="flex gap-2">
                                     <button
-                                        className="bg-blue-500 text-white p-2 rounded"
+                                        className="bg-gray-300 text-white p-2 rounded"
                                         onClick={() => updatePackage(pkg._id, { packageName: `${pkg.packageName} (Güncellendi)` })}
                                     >
-                                        ✏️
+                                        🖊️
                                     </button>
                                     <button
-                                        className="bg-red-500 text-white p-2 rounded"
+                                        className="bg-gray-300 text-white p-2 rounded"
                                         onClick={() => deletePackage(pkg._id)}
                                     >
                                         🗑️
