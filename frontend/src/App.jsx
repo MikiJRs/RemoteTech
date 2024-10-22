@@ -5,8 +5,8 @@ import ManageQuestionPackage from './components/ManageQuestionPackage';
 import AddPackage from './components/AddPackage';
 import InterviewList from './components/interviewlist';
 import VideoCollection from './components/VideoCollection';
-import QuestionList from   './components/QuestionList.jsx';
-
+import QuestionList from './components/QuestionList.jsx';
+import EditManageQuestionPackage from './components/EditManageQuestionPackage';
 
 const App = () => {
   return (
@@ -20,6 +20,9 @@ const App = () => {
 
         {/* Paket Ekleme Sayfası */}
         <Route path="/manage-question-package/add-package" element={<AddPackage />} />
+
+        {/* Paket Düzenleme Sayfası */}
+        <Route path="/edit-package/:id" element={<EditManageQuestionPackage />} />
 
         {/* InterviewList bileşeni için route */}
         <Route path="/interviewlist" element={<InterviewList />} />

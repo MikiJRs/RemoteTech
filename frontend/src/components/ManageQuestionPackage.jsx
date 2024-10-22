@@ -49,7 +49,7 @@ const ManageQuestionPackage = () => {
                 <div className="p-8">
                     <div className="flex justify-between items-center mb-8">
                         <h2 className="text-2xl font-semibold text-[#002D3A]">Manage Question Package</h2>
-                        <button onClick={() => navigate('/manage-question-package/add-package')} className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">+</button>
+                        <button onClick={() => navigate('/manage-question-package/add-package')} className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">Add Package</button>
                     </div>
 
                     {/* Paket Listesi */}
@@ -71,12 +71,14 @@ const ManageQuestionPackage = () => {
                                 <div className="flex justify-center gap-3">
                                     <button
                                         className="bg-gray-300 hover:bg-blue-600 text-white p-2 rounded transition-colors duration-200"
-                                        onClick={() =>
-                                            updatePackage(pkg._id, { packageName: `${pkg.packageName} (Güncellendi)` })
-                                        }
+                                        onClick={() => {
+                                            console.log('Navigating to edit page with id:', pkg._id); // Bu satır tıklamanın çalışıp çalışmadığını kontrol eder.
+                                            navigate(`/edit-package/${pkg._id}`);
+                                        }}
                                     >
                                         🖊️
                                     </button>
+
                                     <button
                                         className="bg-gray-300 hover:bg-red-600 text-white p-2 rounded transition-colors duration-200"
                                         onClick={() => deletePackage(pkg._id)}

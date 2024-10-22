@@ -103,9 +103,9 @@ const AddPackage = () => {
               placeholder="Package Title..."
               value={packageName}
               onChange={(e) => setPackageName(e.target.value)}
-              className="flex-grow p-3 border rounded-md mr-2"
+              className="flex-grow p-2 border rounded-md mr-2"
             />
-            <button onClick={handleAddQuestion} className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">+</button>
+            <button onClick={handleAddQuestion} className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">Add Question</button>
           </div>
 
           {/* Soru Listesi */}
@@ -142,7 +142,7 @@ const AddPackage = () => {
 
           {/* Soru Ekleme ve Kaydetme Butonları */}
           <div className="flex justify-between">
-            <button className="bg-gray-400 p-2 w-24 rounded hover:bg-gray-300" onClick={() => navigate('/manage-question-package')}>Cancel</button>
+            <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition" onClick={() => navigate('/manage-question-package')}>Cancel</button>
             <button onClick={handleSave} className="bg-[#004D61] text-white p-2 w-24 rounded">
               {loading ? 'Saving...' : 'Save'}
             </button>
