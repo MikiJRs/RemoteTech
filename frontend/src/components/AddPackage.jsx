@@ -7,7 +7,7 @@ const AddPackage = () => {
   const [packageName, setPackageName] = useState('');
   const [questions, setQuestions] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newQuestion, setNewQuestion] = useState({ question: '', time: '2 min' });
+  const [newQuestion, setNewQuestion] = useState({ question: '', time: '' });
   const [errorMessage, setErrorMessage] = useState('');
 
   // Store'dan addPackage fonksiyonunu alıyoruz
@@ -24,31 +24,39 @@ const AddPackage = () => {
 
   const handleSaveQuestion = () => {
     if (!newQuestion.question.trim()) {
-      setErrorMessage('Lütfen bir soru girin.');
+      setErrorMessage('Please enter a question.');
+      return;
+    }
+    if (!newQuestion.time.trim()) {
+      setErrorMessage('Please enter the question time.');
+      return;
+    }
+    if (Number(newQuestion.time) <= 0) {
+      setErrorMessage('Question time cannot be negative or zero.');
       return;
     }
 
     setQuestions([...questions, { id: questions.length + 1, question: newQuestion.question, time: newQuestion.time }]);
-    setNewQuestion({ question: '', time: '2 min' });
+    setNewQuestion({ question: '', time: '' });
     setShowModal(false);
     setErrorMessage('');
   };
 
   const handleSave = async () => {
     if (!packageName.trim()) {
-      setErrorMessage('Lütfen paket ismini girin.');
+      setErrorMessage('Please enter the package name.');
       return;
     }
 
     if (questions.length === 0) {
-      setErrorMessage('En az bir soru eklemelisiniz.');
+      setErrorMessage('You must include at least one question.');
       return;
     }
 
     // Kontrol: Her sorunun bir `questionText` alanına sahip olduğundan emin ol
     const invalidQuestions = questions.some(q => !q.question.trim());
     if (invalidQuestions) {
-      setErrorMessage('Lütfen tüm soruların dolu olduğundan emin olun.');
+      setErrorMessage('Please make sure that all questions are filled.');
       return;
     }
 
@@ -57,7 +65,7 @@ const AddPackage = () => {
       await addPackage({ packageName: packageName.trim(), questions: questions.map(q => ({ questionText: q.question.trim(), time: q.time })) });
       navigate('/manage-question-package');
     } catch (err) {
-      console.error('Paket kaydedilemedi:', err);
+      console.error('Package could not be saved:', err);
     }
   };
 
@@ -110,30 +118,54 @@ const AddPackage = () => {
 
           {/* Soru Listesi */}
           <div className="bg-gray-100 p-4 rounded-lg mb-4">
-            <div className="flex justify-between mb-2">
-              <span>Order No</span>
-              <span>Question Content</span>
-              <span>Time</span>
-              <span>Action</span>
-            </div>
+    <div className="grid grid-cols-12 gap-2 font-semibold text-gray-700 mb-4 border-b pb-2">
+        <span className="col-span-1">Order No</span>
+        <span className="col-span-8">Question Content</span>
+        <span className="col-span-2">Time</span>
+        <span className="col-span-1 text-center">Action</span>
+    </div>
 
-            {questions.map((q, index) => (
-              <div key={q.id ? q.id : `question-${index}`} className="flex justify-between items-center bg-white p-4 mb-2 rounded-lg shadow-md">
-                <span>{index + 1}</span>
-                <input
-                  type="text"
-                  value={q.question}
-                  onChange={(e) => handleQuestionChange(q.id, e.target.value)}
-                  className="flex-1 p-2 border rounded"
-                  placeholder="Enter your question here"
-                />
-                <span>{q.time}</span>
-                <button onClick={() => setQuestions(questions.filter(question => question.id !== q.id))} className="bg-gray-300 hover:bg-red-600 text-white p-2 rounded transition-colors duration-200">
-                  🗑️
+    {questions.map((q, index) => (
+        <div key={q.id ? q.id : `question-${index}`} className="grid grid-cols-12 gap-2 items-center bg-white p-4 mb-2 rounded-lg shadow-md">
+            {/* Order No */}
+            <span className="col-span-1">{index + 1}</span>
+
+            {/* Question Content */}
+            <input
+                type="text"
+                value={q.question}
+                onChange={(e) => handleQuestionChange(q.id, e.target.value)}
+                className="col-span-8 p-2 border rounded"
+                placeholder="Enter your question here"
+            />
+
+            {/* Time */}
+            <input
+                type="number"
+                value={q.time}
+                onChange={(e) => setQuestions(questions.map((question, i) => i === index ? { ...question, time: e.target.value } : question))}
+                className="col-span-2 p-2 border rounded"
+                placeholder="Time (minutes)"
+                min="1"
+                required
+            />
+
+            {/* Action - Delete Button */}
+            <div className="col-span-1 flex justify-end items-center">
+                <button
+                    onClick={() => setQuestions(questions.filter(question => question.id !== q.id))}
+                    className="bg-gray-300 hover:bg-red-600 text-white p-2 rounded transition-colors duration-200"
+                >
+                    🗑️
                 </button>
-              </div>
-            ))}
-          </div>
+            </div>
+        </div>
+    ))}
+</div>
+
+
+
+
 
           {/* Hata Mesajı */}
           {errorMessage && (
