@@ -1,21 +1,30 @@
-// MulakatAdmin.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import QuestionListModal from './QuestionList.jsx';
+import useInterviewStore from '../stores/interviewStore'; // Store'u import ettik
+import useQuestionPackageStore from '../stores/questionPackageStore'; // Paketleri çekmek için store'u import ettik
+import axios from 'axios'; // Axios'u ekledik
 
-const MulakatAdmin = () => {
+const InterviewList = () => {
   const navigate = useNavigate();
   const [modalGoster, setModalGoster] = useState(false);
-  const [interviewList, setInterviewList] = useState([]);
   const [title, setTitle] = useState('');
-  const [packageType, setPackageType] = useState('');
+  const [selectedPackages, setSelectedPackages] = useState([]); // Birden fazla paket için dizi
   const [expireDate, setExpireDate] = useState(null);
   const [canSkip, setCanSkip] = useState(false);
   const [showAtOnce, setShowAtOnce] = useState(false);
   const [questionListOpen, setQuestionListOpen] = useState(false);
 
-  const totalCandidates = 6;
-  const onHoldCandidates = 3;
+  // Zustand store'dan gerekli fonksiyonları ve verileri alıyoruz
+  const { interviewList, fetchInterviews, deleteInterview } = useInterviewStore();
+  const { questionPackages, fetchPackages } = useQuestionPackageStore(); // Paketleri çekmek için gerekli fonksiyonlar
+
+  useEffect(() => {
+    // Component yüklendiğinde mülakat listesini getir
+    fetchInterviews();
+    // Component yüklendiğinde paket listesini getir
+    fetchPackages();
+  }, [fetchInterviews, fetchPackages]);
 
   const handleSoruEkle = () => {
     setModalGoster(true);
@@ -25,31 +34,59 @@ const MulakatAdmin = () => {
     setModalGoster(false);
   };
 
-  const handleFormKaydet = () => {
-    const newInterview = {
-      title,
-      packageType,
-      expireDate,
-      canSkip,
-      showAtOnce,
-      totalCandidates,
-      onHoldCandidates,
-    };
-
-    setInterviewList([...interviewList, newInterview]);
-
-    setTitle('');
-    setPackageType('');
-    setExpireDate(null);
-    setCanSkip(false);
-    setShowAtOnce(false);
-
-    setModalGoster(false);
+  const handlePackageChange = (pkgId) => {
+    // Eğer paket zaten seçildiyse çıkar, değilse ekle
+    if (selectedPackages.includes(pkgId)) {
+      setSelectedPackages(selectedPackages.filter(id => id !== pkgId));
+    } else {
+      setSelectedPackages([...selectedPackages, pkgId]);
+    }
   };
 
-  const handleInterviewDelete = (index) => {
-    const updatedList = interviewList.filter((_, i) => i !== index);
-    setInterviewList(updatedList);
+  const handleFormKaydet = async () => {
+    const newInterview = {
+      interviewTitle: title,
+      extraQuestions: [
+        { question: "What is your name?", time: 30 },
+        { question: "What is your age?", time: 15 }
+      ],
+      expireDate: expireDate,
+      // Backend ile uyumlu nesne formatında packageIds gönderiyoruz
+      packageIds: selectedPackages.map(packageId => ({ packageId }))
+    };
+
+    try {
+      // Axios ile POST isteği yap
+      const response = await axios.post('http://localhost:5555/api/interviews', newInterview, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log('Interview created successfully:', response.data);
+      
+      // Başarıyla oluşturulursa modalı kapat ve formu temizle
+      setModalGoster(false);
+      setTitle('');
+      setSelectedPackages([]); // Paket seçimlerini temizle
+      setExpireDate(null);
+      setCanSkip(false);
+      setShowAtOnce(false);
+
+      // Yeni listeyi getir
+      fetchInterviews();
+    } catch (error) {
+      console.error('Failed to create interview:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const handleInterviewDelete = (id) => {
+    // Mülakatı zustand üzerinden siliyoruz
+    deleteInterview(id);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // Tarihi daha okunabilir formatta göster
   };
 
   return (
@@ -80,14 +117,13 @@ const MulakatAdmin = () => {
             >
               Logout
             </button>
-
           </div>
         </div>
 
         <div className="flex justify-between items-center px-8 py-4">
           <h2 className="text-2xl font-semibold text-[#002D3A]">Interview List</h2>
           <button onClick={handleSoruEkle} className="bg-[#004D61] text-white px-4 py-2 rounded-md hover:bg-[#003843] transition">
-            +
+            Create Interview
           </button>
         </div>
 
@@ -97,20 +133,20 @@ const MulakatAdmin = () => {
             <ul className="grid grid-cols-3 gap-6">
               {interviewList.map((interview, index) => (
                 <li
-                  key={index}
+                  key={interview._id}
                   className="p-6 border rounded bg-white shadow-md relative"
                   style={{ minHeight: '280px' }}>
                   <button
                     className="absolute top-2 left-2 text-gray-400 hover:text-gray-600"
                     onClick={() => setQuestionListOpen(true)}>
-                    ?
+                    ❔
                   </button>
 
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold mt-4">{interview.title}</h3>
+                    <h3 className="text-lg font-semibold mt-4">{interview.interviewTitle}</h3>
                     <div className="text-gray-500">
                       <button className="mr-2">Copy Link</button>
-                      <button onClick={() => handleInterviewDelete(index)}>🗑️</button>
+                      <button onClick={() => handleInterviewDelete(interview._id)}>🗑️</button>
                     </div>
                   </div>
                   <div className="border p-2 rounded bg-gray-100 mb-4">
@@ -127,7 +163,7 @@ const MulakatAdmin = () => {
                     </div>
                   </div>
                   <div className="flex justify-between items-center text-sm text-gray-500">
-                    <span>📅 Published</span>
+                    <span>📅 To be published until {formatDate(interview.expireDate)}</span>
                     <button
                       className="text-blue-500"
                       onClick={() => navigate(`/videocollection/${interview.packageType}`)}>
@@ -165,17 +201,21 @@ const MulakatAdmin = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block mb-2 font-semibold">Package</label>
-                <select
-                  className="w-full p-2 border rounded"
-                  value={packageType}
-                  onChange={(e) => setPackageType(e.target.value)}
-                >
-                  <option value="">Select Package</option>
-                  <option value="Basic">Basic</option>
-                  <option value="Pro">Pro</option>
-                  <option value="Enterprise">Enterprise</option>
-                </select>
+                <label className="block mb-2 font-semibold">Select Packages</label>
+                <div className="grid grid-cols-2 gap-4">
+                  {questionPackages.map((pkg) => (
+                    <div key={pkg._id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={pkg._id}
+                        value={pkg._id}
+                        checked={selectedPackages.includes(pkg._id)}
+                        onChange={() => handlePackageChange(pkg._id)}
+                      />
+                      <label htmlFor={pkg._id} className="ml-2">{pkg.packageName}</label>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="mb-4">
@@ -186,25 +226,6 @@ const MulakatAdmin = () => {
                   value={expireDate || ''}
                   onChange={(e) => setExpireDate(e.target.value)}
                 />
-              </div>
-
-              <div className="flex justify-between mb-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={canSkip}
-                    onChange={(e) => setCanSkip(e.target.checked)}
-                  />
-                  <span className="ml-2">Can Skip</span>
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={showAtOnce}
-                    onChange={(e) => setShowAtOnce(e.target.checked)}
-                  />
-                  <span className="ml-2">Show At Once</span>
-                </label>
               </div>
 
               <button
@@ -220,4 +241,4 @@ const MulakatAdmin = () => {
   );
 };
 
-export default MulakatAdmin;
+export default InterviewList;

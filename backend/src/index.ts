@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import { createQuestionPackage, getAllQuestionPackages, deleteQuestionPackage, updateQuestionPackage } from './controllers/QuestionPackageController';
 import loginRoutes from './routes/loginRoutes';
+import interviewRoutes from './routes/interviewRoutes'; // Interview routes'u import ettik
 import adminMiddleware from './middlewares/adminMiddleware'; // Admin middleware'i import ettik
 
 const app = express();
@@ -37,6 +38,9 @@ app.delete('/api/question-package/:id', deleteQuestionPackage);
 
 // Belirli bir QuestionPackage'i ID ile güncellemek için PUT isteği (Sadece adminler)
 app.put('/api/question-package/:id', updateQuestionPackage);
+
+// Interview routes'u ekliyoruz
+app.use('/api', interviewRoutes); // Interview rotalarını /api altında kullan
 
 // Login route
 app.use('/api', loginRoutes);

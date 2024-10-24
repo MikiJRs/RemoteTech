@@ -76,7 +76,7 @@ const Login = () => {
 
             {/* Log in Button */}
             <button type="submit" className="w-full bg-[#004D61] text-white py-2 rounded-md hover:bg-[#003843] transition">
-              Log in
+              Login
             </button>
           </form>
         </div>
